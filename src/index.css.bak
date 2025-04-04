@@ -1,0 +1,180 @@
+@import "https://www.nerdfonts.com/assets/css/webfont.css";
+
+body {
+  color: #ffffffff;
+  font-family: "IosevkaTerm Nerd Font Propo", ui-monospace, monospace;
+  font-size: 10px;
+  overflow: hidden;
+  margin-right: 8px;
+  margin-left: 8px;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+#root {
+  background: rgb(36 40 59 / 85%);
+  border-radius: 10px;
+}
+
+i {
+  font-size: 8px;
+}
+
+.app {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(50px, 100%), 1fr));
+  align-items: center;
+  height: 100%;
+  padding: 0px 1vw;
+}
+
+.left,
+.center,
+.right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.left {
+  justify-self: start;
+}
+
+.center {
+  justify-self: center;
+}
+
+.right {
+  justify-self: end;
+}
+
+.chip {
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: #7aa2f7ff;
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  flex: 0 0 auto;
+  gap: 4px;
+}
+
+.systray-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 4px;
+}
+
+button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  color: rgb(255 255 255 / 100%);
+}
+
+/* Custom styling for the slider */
+input[type="range"] {
+  -webkit-appearance: none; /* Override default CSS styles */
+  appearance: none;
+  width: 100%;
+  background: rgb(36 40 59 / 85%);
+  border-radius: 8px;
+  border: none;
+  margin: 0;
+  padding: 0;
+  height: 2px;
+  cursor: pointer;
+}
+
+/* Slider thumb */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 8px;
+  height: 8px;
+  background: #fff;
+  border-radius: 50%;
+  cursor: ew-resize;
+  border: none;
+}
+input[type="range"]::-moz-range-thumb {
+  width: 8px;
+  height: 8px;
+  background: #fff;
+  border-radius: 50%;
+  border: none;
+  cursor: ew-resize;
+}
+input[type="range"]::-ms-thumb {
+  width: 8px;
+  height: 8px;
+  background: #fff;
+  border-radius: 50%;
+  border: none;
+  cursor: ew-resize;
+}
+input[type="range"]:focus {
+  outline: none;
+}
+
+.audio-container {
+  transition: all 0.3s ease;
+  overflow: hidden;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  flex: 1 !important;
+}
+
+.audio-value {
+  width: 16px;
+  text-align: right;
+}
+
+.audio-slider {
+  width: 96px;
+  margin: 0px;
+}
+
+.audio-slider-container {
+  width: 0px;
+  overflow: hidden;
+  transition: width 0.25s ease, margin-left 0.25s ease;
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  margin-left: -4px;
+}
+
+.audio-container:hover .audio-slider-container {
+  width: 128px;
+  margin-left: 0px;
+}
+
+.workspaces {
+  background-color: transparent !important;
+  gap: 4px !important;
+}
+
+.workspace {
+  background: rgb(255 255 255 / 5%);
+  padding: 4px 8px;
+  color: rgb(255 255 255 / 90%);
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  font-weight: bold;
+
+  &.displayed {
+    background: #9ece6a !important;
+    color: #292e42;
+  }
+
+  &:hover {
+    background: #545c7e;
+  }
+}
