@@ -98,57 +98,125 @@ function App() {
                 output.glazewm.runCommand("toggle-tiling-direction")
               }
             >
-              <i
-                class={`nf ${output.glazewm.tilingDirection === "horizontal" ? "nf-md-swap_horizontal" : "nf-md-swap_vertical"}`}
-              />
+              <span>
+                <i
+                  class={`nf ${output.glazewm.tilingDirection === "horizontal" ? "nf-md-swap_horizontal" : "nf-md-swap_vertical"}`}
+                />
+                {output.glazewm.tilingDirection === "horizontal" ? "H" : "V"}
+              </span>
             </button>
           </div>
         )}
 
         {output.media?.currentSession && (
-          <div class="chip">
-            <i class="nf nf-fa-music" />
-            {truncate(output.media.currentSession.artist, 16)} -{" "}
-            {truncate(output.media.currentSession.title, 32)}
-            <button
-              type="button"
-              onClick={(e) => {
-                e.preventDefault();
-                output.media?.previous();
-              }}
-            >
-              <i class="nf nf-md-skip_previous" />
-            </button>
-            <button
-              type="button"
-              onClick={() => output.media?.togglePlayPause()}
-            >
-              <i
-                class={`
+          <div class="media-container">
+            <div class="chip media-pill-container">
+              <span>
+                <i class="nf nf-fa-music" />
+                {truncate(output.media.currentSession.title, 16)}
+              </span>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  output.media?.previous();
+                }}
+              >
+                <i class="nf nf-md-skip_previous" />
+              </button>
+              <button
+                type="button"
+                onClick={() => output.media?.togglePlayPause()}
+              >
+                <i
+                  class={`
                   nf
                   ${
                     output.media.currentSession.isPlaying
                       ? "nf-fa-pause"
                       : "nf-fa-play"
                   }`}
-              />
-            </button>
-            <button
-              type="button"
-              onClick={(e) => {
-                e.preventDefault();
-                output.media?.next();
-              }}
-            >
-              <i class="nf nf-md-skip_next" />
-            </button>
+                />
+              </button>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  output.media?.next();
+                }}
+              >
+                <i class="nf nf-md-skip_next" />
+              </button>
+            </div>
+            <div class="media-popup-container">
+              <div class="media-popup">
+                <div class="media-title">
+                  {output.media.currentSession.title}
+                </div>
+                <div class="media-artist">
+                  {output.media.currentSession.artist}
+                </div>
+                <div class="media-album-title">
+                  {output.media.currentSession.albumTitle}
+                </div>
+                <div class="media-album-artist">
+                  {output.media.currentSession.albumArtist}
+                </div>
+                <div class="media-progress">
+                  {secondsToTime(output.media.currentSession.position)}
+                  <input
+                    type="range"
+                    min={output.media.currentSession.startTime}
+                    max={output.media.currentSession.endTime}
+                    step="1"
+                    style="pointer-events: none; margin-right: 8px; margin-left: 8px;"
+                    value={output.media.currentSession.position}
+                  />
+                  {secondsToTime(output.media.currentSession.endTime)}
+                </div>
+                <div class="media-control">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      output.media?.previous();
+                    }}
+                  >
+                    <i class="nf nf-md-skip_previous" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => output.media?.togglePlayPause()}
+                  >
+                    <i
+                      class={`
+                  nf
+                  ${
+                    output.media.currentSession.isPlaying
+                      ? "nf-fa-pause"
+                      : "nf-fa-play"
+                  }`}
+                    />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      output.media?.next();
+                    }}
+                  >
+                    <i class="nf nf-md-skip_next" />
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         )}
 
         {output.audio?.defaultPlaybackDevice && (
           <div class="chip audio-container">
-            <i class="nf nf-fa-volume_high" />
             <span>
+              <i class="nf nf-fa-volume_high" />
               {output.audio.defaultPlaybackDevice.volume
                 .toString()
                 .padStart(3, "\u2002")}
@@ -196,8 +264,9 @@ function App() {
           <div class="chip">
             <span class="chip-label">
               <i class="nf nf-fa-memory" />
+              {Math.round(output.memory.usage).toString().padStart(3, "\u2002")}
+              %
             </span>
-            {Math.round(output.memory.usage).toString().padStart(3, "\u2002")}%
           </div>
         )}
 
@@ -205,8 +274,8 @@ function App() {
           <div class="chip">
             <span class="chip-label">
               <i class="nf nf-oct-cpu" />
+              {Math.round(output.cpu.usage).toString().padStart(3, "\u2002")}%
             </span>
-            {Math.round(output.cpu.usage).toString().padStart(3, "\u2002")}%
           </div>
         )}
 
@@ -214,11 +283,11 @@ function App() {
           <div class="chip">
             <span class="chip-label">
               <i class="nf nf-fa-battery_4" />
+              {Math.round(output.battery.chargePercent)
+                .toString()
+                .padStart(3, "\u2002")}
+              %
             </span>
-            {Math.round(output.battery.chargePercent)
-              .toString()
-              .padStart(3, "\u2002")}
-            %
           </div>
         )}
       </div>
@@ -248,6 +317,15 @@ function truncate(s: string, max_len: number): string {
     s_trunc = `${s_trunc.substring(0, max_len - 1)}…`;
   }
   return s_trunc;
+}
+
+function secondsToTime(seconds: number) {
+  const minutes = Math.floor(seconds / 60); // Get the minutes
+  const remainingSeconds = seconds % 60; // Get the remaining seconds
+  // Pad with leading zeros if necessary
+  const formattedMinutes = minutes.toString().padStart(2, "0");
+  const formattedSeconds = remainingSeconds.toString().padStart(2, "0");
+  return `${formattedMinutes}:${formattedSeconds}`;
 }
 
 // function App() {
