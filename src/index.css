@@ -218,6 +218,8 @@ how to remove the virtical space around the range input in IE*/
   display: flex;
   flex-flow: column nowrap;
   align-items: center;
+  justify-content: center;
+  text-align: center;
   margin-top: 36px;
   padding: 8px;
   /* background: rgb(36 40 59 / 30%); */
@@ -225,7 +227,7 @@ how to remove the virtical space around the range input in IE*/
   gap: 4px;
   border: 1px solid #ffffffff;
   border-radius: 8px;
-  backdrop-filter: blur(16px);
+  max-width: 384px;
 }
 
 .media-popup-container {
@@ -355,7 +357,7 @@ how to remove the virtical space around the range input in IE*/
   display: flex;
   position: relative;
   transform: translate3d(var(--move-initial), 0, 0);
-  animation: marquee 7.5s linear infinite;
+  animation: marquee 10s linear infinite;
   animation-play-state: paused;
 }
 
