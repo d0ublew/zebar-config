@@ -1,4 +1,5 @@
 /* @refresh reload */
+import { createSignal } from "solid-js";
 import "./index.css";
 import * as glazewm from "glazewm";
 // import "./audio.module.css";
@@ -29,14 +30,12 @@ function App() {
   return (
     <div class="app">
       <div class="left">
-        {output.glazewm && (
-          <div class="chip workspaces">
-            {output.glazewm.currentWorkspaces.map((workspace) => (
+        <div class="chip workspaces">
+          <For each={output.glazewm?.currentWorkspaces}>
+            {(workspace) => (
               <button
                 type="button"
                 class={`workspace ${workspace.hasFocus && "focused"} ${workspace.isDisplayed && "displayed"}`}
-                // @ts-ignore
-                key={workspace.name}
                 onClick={(e) => {
                   e.preventDefault();
                   output.glazewm.runCommand(
@@ -46,13 +45,17 @@ function App() {
               >
                 {workspace.displayName ?? workspace.name}
               </button>
-            ))}
-          </div>
-        )}
+            )}
+          </For>
+        </div>
 
-        {output.glazewm && (
-          <div class="workspace-title">{getAppTitle(output.glazewm)}</div>
-        )}
+        <div class="workspace-title">
+          {/* {getAppTitle(output.glazewm?.focusedContainer)} */}
+          {output.glazewm?.focusedContainer.type ===
+          glazewm.ContainerType.WINDOW
+            ? output.glazewm.focusedContainer.title
+            : ""}
+        </div>
       </div>
 
       <div class="center">{output.date?.formatted}</div>
@@ -72,23 +75,23 @@ function App() {
           )
         }
 
-        {output.glazewm?.bindingModes.map((bindingMode) => (
-          //@ts-ignore
-          <div class="chip" key={bindingMode.name}>
-            <button
-              type="button"
-              // @ts-ignore
-              onClick={(e) => {
-                e.preventDefault();
-                output.glazewm.runCommand(
-                  `wm-disable-binding-mode --name ${bindingMode.name}`,
-                );
-              }}
-            >
-              {bindingMode.displayName ?? bindingMode.name}
-            </button>
-          </div>
-        ))}
+        <For each={output.glazewm?.bindingModes}>
+          {(bindingMode) => (
+            <div class="chip">
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  output.glazewm.runCommand(
+                    `wm-disable-binding-mode --name ${bindingMode.name}`,
+                  );
+                }}
+              >
+                {bindingMode.displayName ?? bindingMode.name}
+              </button>
+            </div>
+          )}
+        </For>
 
         {output.glazewm && (
           <div class="chip">
@@ -98,7 +101,7 @@ function App() {
                 output.glazewm.runCommand("toggle-tiling-direction")
               }
             >
-              <span>
+              <span class="chip-text">
                 <i
                   class={`nf ${output.glazewm.tilingDirection === "horizontal" ? "nf-md-swap_horizontal" : "nf-md-swap_vertical"}`}
                 />
@@ -108,114 +111,20 @@ function App() {
           </div>
         )}
 
-        {output.media?.currentSession && (
-          <div class="media-container">
-            <div class="chip media-pill-container">
-              <span>
-                <i class="nf nf-fa-music" />
-                {truncate(output.media.currentSession.title, 16)}
-              </span>
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  output.media?.previous();
-                }}
-              >
-                <i class="nf nf-md-skip_previous" />
-              </button>
-              <button
-                type="button"
-                onClick={() => output.media?.togglePlayPause()}
-              >
-                <i
-                  class={`
-                  nf
-                  ${
-                    output.media.currentSession.isPlaying
-                      ? "nf-fa-pause"
-                      : "nf-fa-play"
-                  }`}
-                />
-              </button>
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  output.media?.next();
-                }}
-              >
-                <i class="nf nf-md-skip_next" />
-              </button>
-            </div>
-            <div class="media-popup-container">
-              <div class="media-popup">
-                <div class="media-title">
-                  {output.media.currentSession.title}
-                </div>
-                <div class="media-artist">
-                  {output.media.currentSession.artist}
-                </div>
-                <div class="media-album-title">
-                  {output.media.currentSession.albumTitle}
-                </div>
-                <div class="media-album-artist">
-                  {output.media.currentSession.albumArtist}
-                </div>
-                <div class="media-progress">
-                  {secondsToTime(output.media.currentSession.position)}
-                  <input
-                    type="range"
-                    min={output.media.currentSession.startTime}
-                    max={output.media.currentSession.endTime}
-                    step="1"
-                    style="pointer-events: none; margin-right: 8px; margin-left: 8px;"
-                    value={output.media.currentSession.position}
-                  />
-                  {secondsToTime(output.media.currentSession.endTime)}
-                </div>
-                <div class="media-control">
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      output.media?.previous();
-                    }}
-                  >
-                    <i class="nf nf-md-skip_previous" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => output.media?.togglePlayPause()}
-                  >
-                    <i
-                      class={`
-                  nf
-                  ${
-                    output.media.currentSession.isPlaying
-                      ? "nf-fa-pause"
-                      : "nf-fa-play"
-                  }`}
-                    />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      output.media?.next();
-                    }}
-                  >
-                    <i class="nf nf-md-skip_next" />
-                  </button>
-                </div>
-              </div>
-            </div>
+        <div class="media-container">
+          <div class="chip media-pill-container">
+            <span class="chip-text">
+              <i class="nf nf-fa-music" />
+              {truncate(output.media?.currentSession?.title, 16) || "offline"}
+            </span>
+            {getMediaPlaybackControl(output.media)}
           </div>
-        )}
+          {getMediaPopup(output.media)}
+        </div>
 
         {output.audio?.defaultPlaybackDevice && (
           <div class="chip audio-container">
-            <span>
+            <span class="chip-text">
               <i class="nf nf-fa-volume_high" />
               {output.audio.defaultPlaybackDevice.volume
                 .toString()
@@ -262,7 +171,7 @@ function App() {
 
         {output.memory && (
           <div class="chip">
-            <span class="chip-label">
+            <span class="chip-text">
               <i class="nf nf-fa-memory" />
               {Math.round(output.memory.usage).toString().padStart(3, "\u2002")}
               %
@@ -272,7 +181,7 @@ function App() {
 
         {output.cpu && (
           <div class="chip">
-            <span class="chip-label">
+            <span class="chip-text">
               <i class="nf nf-oct-cpu" />
               {Math.round(output.cpu.usage).toString().padStart(3, "\u2002")}%
             </span>
@@ -281,8 +190,8 @@ function App() {
 
         {output.battery && (
           <div class="chip">
-            <span class="chip-label">
-              <i class="nf nf-fa-battery_4" />
+            <span class="chip-text">
+              <i class="nf nf-md-battery" />
               {Math.round(output.battery.chargePercent)
                 .toString()
                 .padStart(3, "\u2002")}
@@ -311,7 +220,10 @@ function getAppTitle(gwo: zebar.GlazeWmOutput): string {
   return title;
 }
 
-function truncate(s: string, max_len: number): string {
+function truncate(s: string, max_len: number) {
+  if (!s) {
+    return undefined;
+  }
   let s_trunc = s;
   if (s_trunc.length > max_len) {
     s_trunc = `${s_trunc.substring(0, max_len - 1)}…`;
@@ -326,6 +238,70 @@ function secondsToTime(seconds: number) {
   const formattedMinutes = minutes.toString().padStart(2, "0");
   const formattedSeconds = remainingSeconds.toString().padStart(2, "0");
   return `${formattedMinutes}:${formattedSeconds}`;
+}
+
+function getMediaPlaybackControl(media: zebar.MediaOutput) {
+  if (!media?.currentSession) {
+    return <div />;
+  }
+  return (
+    <div class="media-playback">
+      <button
+        type="button"
+        onClick={(e) => {
+          e.preventDefault();
+          media?.previous();
+        }}
+      >
+        <i class="nf nf-md-skip_previous" />
+      </button>
+      <button type="button" onClick={() => media?.togglePlayPause()}>
+        <i
+          class={`nf ${media?.currentSession?.isPlaying ? "nf-fa-pause" : "nf-fa-play"}`}
+        />
+      </button>
+      <button
+        type="button"
+        onClick={(e) => {
+          e.preventDefault();
+          media?.next();
+        }}
+      >
+        <i class="nf nf-md-skip_next" />
+      </button>
+    </div>
+  );
+}
+
+function getMediaPopup(media: zebar.MediaOutput) {
+  if (!media?.currentSession) {
+    return <div />;
+  }
+  return (
+    <div class="media-popup-container">
+      <div class="media-popup">
+        <div class="media-title">{media?.currentSession?.title}</div>
+        <div class="media-artist">{media?.currentSession?.artist}</div>
+        <div class="media-album-title">{media?.currentSession?.albumTitle}</div>
+        <div class="media-album-artist">
+          {media?.currentSession?.albumArtist}
+        </div>
+        <div class="media-progress">
+          {secondsToTime(media?.currentSession?.position)}
+          <input
+            type="range"
+            min={media?.currentSession?.startTime}
+            max={media?.currentSession?.endTime}
+            step="1"
+            style="pointer-events: none; margin-right: 8px; margin-left: 8px;"
+            value={media?.currentSession?.position}
+          />
+          {secondsToTime(media?.currentSession?.endTime)}
+        </div>
+        {getMediaPlaybackControl(media)}
+      </div>
+    </div>
+  );
 }
 
 // function App() {

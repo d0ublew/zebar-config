@@ -3,7 +3,7 @@
 body {
   color: #ffffffff;
   font-family: "IosevkaTerm Nerd Font Propo", ui-monospace, monospace;
-  font-size: 10px;
+  font-size: 12px;
   overflow: hidden;
   margin-right: 8px;
   margin-left: 8px;
@@ -21,14 +21,7 @@ body {
 }
 
 i {
-  font-size: 8px;
-}
-
-span {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  flex-wrap: nowrap;
+  font-size: 10px;
 }
 
 .app {
@@ -45,6 +38,8 @@ span {
   display: flex;
   align-items: center;
   gap: 8px;
+  max-width: 100%;
+  /* overflow: hidden; */
 }
 
 .left {
@@ -69,6 +64,13 @@ span {
   flex: 0 0 auto;
   gap: 2px;
   z-index: 10;
+}
+
+.chip-text {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: nowrap;
 }
 
 .systray-icon {
@@ -136,11 +138,14 @@ input[type="range"]:focus {
   outline: none;
 }
 
+.media-pill-container {
+  anchor-name: --anchormedia;
+}
+
 .media-container {
   display: flex;
   flex-flow: column nowrap;
   flex: 0 0 auto;
-  overflow: hidden;
 }
 
 .media-popup {
@@ -157,10 +162,12 @@ input[type="range"]:focus {
 .media-popup-container {
   display: block;
   position: absolute;
-  top: 8px;
+  position-anchor: --anchormedia;
+  top: anchor(top);
+  right: anchor(right);
   max-height: 0px;
-  min-width: 256px;
-  max-width: 384px;
+  /* min-width: 256px; */
+  /* max-width: 384px; */
   opacity: 0;
   transition: max-height 0.25s ease 0.1s, opacity 0.25s ease 0.1s;
   background-color: transparent;
@@ -169,13 +176,13 @@ input[type="range"]:focus {
 
 .media-container:hover .media-popup-container {
   opacity: 1;
-  max-height: 256px;
+  max-height: 100%;
   pointer-events: auto;
   transition: max-height 0.25s ease 0.5s, opacity 0.25s ease 0.5s;
 }
 
 .media-progress,
-.media-control {
+.media-playback {
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
@@ -216,9 +223,10 @@ input[type="range"]:focus {
 }
 
 .workspace-title {
-  display: flex;
-  flex-wrap: nowrap;
-  padding: 4px 8px;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .workspace {
