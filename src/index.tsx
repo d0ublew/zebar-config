@@ -30,6 +30,45 @@ function App() {
   return (
     <div class="app">
       <div class="left">
+        {
+          //@ts-ignore
+          output.glazewm?.isPaused && (
+            <div
+              class="chip"
+              style="background-color: #f7768e; color: #292e42; padding: 4px 2px;"
+            >
+              <button
+                type="button"
+                onClick={() => output.glazewm.runCommand("wm-toggle-pause")}
+              >
+                <i class="nf nf-fa-lock" />
+              </button>
+            </div>
+          )
+        }
+
+        <For each={output.glazewm?.bindingModes}>
+          {(bindingMode) => (
+            <div class="chip">
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  output.glazewm.runCommand(
+                    `wm-disable-binding-mode --name ${bindingMode.name}`,
+                  );
+                }}
+              >
+                {(bindingMode.name === "resize" && (
+                  <i class="nf nf-fa-edit" />
+                )) ||
+                  bindingMode.name}
+                {/*bindingMode.displayName ?? bindingMode.name*/}
+              </button>
+            </div>
+          )}
+        </For>
+
         <div class="chip workspaces">
           <For each={output.glazewm?.currentWorkspaces}>
             {(workspace) => (
@@ -57,41 +96,18 @@ function App() {
         </div>
       </div>
 
-      <div class="center">{output.date?.formatted}</div>
+      <div class="center">
+        <div
+          class="chip"
+          style="background-color: #e0af68; color: #292e42; font-weight: bold;"
+        >
+          {"\u2002"}
+          {output.date?.formatted}
+          {"\u2002"}
+        </div>
+      </div>
 
       <div class="right">
-        {
-          //@ts-ignore
-          output.glazewm?.isPaused && (
-            <div class="chip">
-              <button
-                type="button"
-                onClick={() => output.glazewm.runCommand("wm-toggle-pause")}
-              >
-                paused
-              </button>
-            </div>
-          )
-        }
-
-        <For each={output.glazewm?.bindingModes}>
-          {(bindingMode) => (
-            <div class="chip">
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  output.glazewm.runCommand(
-                    `wm-disable-binding-mode --name ${bindingMode.name}`,
-                  );
-                }}
-              >
-                {bindingMode.displayName ?? bindingMode.name}
-              </button>
-            </div>
-          )}
-        </For>
-
         {output.glazewm && (
           <div class="chip">
             <button
@@ -104,7 +120,7 @@ function App() {
                 <i
                   class={`nf ${output.glazewm.tilingDirection === "horizontal" ? "nf-md-swap_horizontal" : "nf-md-swap_vertical"}`}
                 />
-                {output.glazewm.tilingDirection === "horizontal" ? "H" : "V"}
+                {/*output.glazewm.tilingDirection === "horizontal" ? "H" : "V"*/}
               </span>
             </button>
           </div>
@@ -114,9 +130,10 @@ function App() {
           <div class="chip media-pill-container">
             <span class="chip-text">
               <i class="nf nf-fa-music" />
+              {"\u2002"}
               {truncate(output.media?.currentSession?.title, 16) || "offline"}
             </span>
-            {getMediaPlaybackControl(output.media)}
+            {getMediaControl(output.media)}
           </div>
           {getMediaPopup(output.media)}
         </div>
@@ -168,29 +185,63 @@ function App() {
           </div>
         )}
 
+        <div class="chip">
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              output.glazewm?.runCommand("shell-exec ms-settings:network-wifi");
+            }}
+          >
+            <span class="chip-text">
+              {getNetworkIcon(output.network)}
+              {"\u2002"}
+              {getNetworkText(output.network)}
+            </span>
+          </button>
+        </div>
+
         {output.memory && (
           <div class="chip">
-            <span class="chip-text">
-              <i class="nf nf-fa-memory" />
-              {Math.round(output.memory.usage).toString().padStart(3, "\u2002")}
-              %
-            </span>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                output.glazewm?.runCommand("shell-exec taskmgr");
+              }}
+            >
+              <span class="chip-text">
+                <i class="nf nf-fa-memory" />
+                {Math.round(output.memory.usage)
+                  .toString()
+                  .padStart(3, "\u2002")}
+                %
+              </span>
+            </button>
           </div>
         )}
 
         {output.cpu && (
           <div class="chip">
-            <span class="chip-text">
-              <i class="nf nf-oct-cpu" />
-              {Math.round(output.cpu.usage).toString().padStart(3, "\u2002")}%
-            </span>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                output.glazewm.runCommand("shell-exec taskmgr");
+              }}
+            >
+              <span class="chip-text">
+                <i class="nf nf-oct-cpu" />
+                {Math.round(output.cpu.usage).toString().padStart(3, "\u2002")}%
+              </span>
+            </button>
           </div>
         )}
 
         {output.battery && (
           <div
             class="chip"
-            style={`background-color: ${getBatteryColor(output.battery)}`}
+            style={`background-color: ${getBatteryColor(output.battery)}; color: #292e42; font-weight: bold;`}
           >
             <span class="chip-text">
               {getBatteryIcon(output.battery)}
@@ -255,17 +306,52 @@ function getBatteryColor(battery: zebar.BatteryOutput) {
   if (battery.isCharging) return "#9ece6a";
   if (battery.chargePercent > 90) return "#7aa2f7";
   if (battery.chargePercent > 70) return "#bb9af7";
-  if (battery.chargePercent > 40) return "#ff9e64";
+  if (battery.chargePercent > 40) return "#e0af68";
   if (battery.chargePercent > 20) return "#f7768e";
   return "#f7768e";
 }
 
-function getMediaPlaybackControl(media: zebar.MediaOutput) {
+function getNetworkIcon(network: zebar.NetworkOutput) {
+  switch (network?.defaultInterface?.type) {
+    case "ethernet":
+      return <i class="nf nf-md-ethernet_cable" />;
+    case "wifi":
+      if (network?.defaultGateway?.signalStrength >= 80) {
+        return <i class="nf nf-md-wifi_strength_4" />;
+      }
+      if (network?.defaultGateway?.signalStrength >= 65) {
+        return <i class="nf nf-md-wifi_strength_3" />;
+      }
+      if (network?.defaultGateway?.signalStrength >= 40) {
+        return <i class="nf nf-md-wifi_strength_2" />;
+      }
+      if (network?.defaultGateway?.signalStrength >= 25) {
+        return <i class="nf nf-md-wifi_strength_1" />;
+      }
+      return <i class="nf nf-md-wifi_strength_outline" />;
+    default:
+      return <i class="nf nf-md-wifi_strength_off_outline" />;
+  }
+}
+
+function getNetworkText(network: zebar.NetworkOutput) {
+  if (network?.defaultInterface) {
+    if (network?.defaultGateway) {
+      // return `${network?.defaultInterface?.ipv4Addresses} (${truncate(network?.defaultGateway?.ssid, 24)})`;
+      return truncate(network?.defaultGateway?.ssid, 24);
+    }
+    // return `${network?.defaultInterface?.ipv4Addresses} (${truncate(network?.defaultInterface?.friendlyName, 24)})`;
+    return truncate(network?.defaultInterface?.friendlyName, 24);
+  }
+  return "disconnected";
+}
+
+function getMediaControl(media: zebar.MediaOutput) {
   if (!media?.currentSession) {
     return <div />;
   }
   return (
-    <div class="media-playback">
+    <div class="media-control">
       <button
         type="button"
         onClick={(e) => {
@@ -318,7 +404,7 @@ function getMediaPopup(media: zebar.MediaOutput) {
           />
           {secondsToTime(media?.currentSession?.endTime)}
         </div>
-        {getMediaPlaybackControl(media)}
+        {getMediaControl(media)}
       </div>
     </div>
   );
