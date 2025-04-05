@@ -1,5 +1,10 @@
 @import "https://www.nerdfonts.com/assets/css/webfont.css";
 
+html,
+body {
+  height: 100%;
+}
+
 body {
   color: #ffffffff;
   font-family: "IosevkaTerm Nerd Font Propo", ui-monospace, monospace;
@@ -7,11 +12,9 @@ body {
   overflow: hidden;
   margin-right: 8px;
   margin-left: 8px;
-}
-
-html,
-body {
-  height: 100%;
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
 }
 
 #root {
