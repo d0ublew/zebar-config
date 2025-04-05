@@ -30,62 +30,61 @@ function App() {
   return (
     <div class="app">
       <div class="left">
-        {
-          //@ts-ignore
-          output.glazewm?.isPaused && (
-            <div
-              class="chip"
-              style="background-color: #f7768e; color: #292e42; padding: 4px 2px;"
-            >
-              <button
-                type="button"
-                onClick={() => output.glazewm.runCommand("wm-toggle-pause")}
-              >
-                <i class="nf nf-fa-lock" />
-              </button>
-            </div>
-          )
-        }
+        <div class="wm-container">
+          {
+            //@ts-ignore
+            output.glazewm?.isPaused && (
+              <div class="chip" style="background-color: #f7768e">
+                <button
+                  type="button"
+                  onClick={() => output.glazewm.runCommand("wm-toggle-pause")}
+                >
+                  <i class="nf nf-fa-lock" />
+                </button>
+              </div>
+            )
+          }
 
-        <For each={output.glazewm?.bindingModes}>
-          {(bindingMode) => (
-            <div class="chip">
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  output.glazewm.runCommand(
-                    `wm-disable-binding-mode --name ${bindingMode.name}`,
-                  );
-                }}
-              >
-                {(bindingMode.name === "resize" && (
-                  <i class="nf nf-fa-edit" />
-                )) ||
-                  bindingMode.name}
-                {/*bindingMode.displayName ?? bindingMode.name*/}
-              </button>
-            </div>
-          )}
-        </For>
-
-        <div class="chip workspaces">
-          <For each={output.glazewm?.currentWorkspaces}>
-            {(workspace) => (
-              <button
-                type="button"
-                class={`workspace ${workspace.hasFocus && "focused"} ${workspace.isDisplayed && "displayed"}`}
-                onClick={(e) => {
-                  e.preventDefault();
-                  output.glazewm.runCommand(
-                    `focus --workspace ${workspace.name}`,
-                  );
-                }}
-              >
-                {workspace.displayName ?? workspace.name}
-              </button>
+          <For each={output.glazewm?.bindingModes}>
+            {(bindingMode) => (
+              <div class="chip" style="background-color: #e0af68">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    output.glazewm.runCommand(
+                      `wm-disable-binding-mode --name ${bindingMode.name}`,
+                    );
+                  }}
+                >
+                  {(bindingMode.name === "resize" && (
+                    <i class="nf nf-fa-edit" />
+                  )) ||
+                    bindingMode.name}
+                  {/*bindingMode.displayName ?? bindingMode.name*/}
+                </button>
+              </div>
             )}
           </For>
+
+          <div class="chip workspaces">
+            <For each={output.glazewm?.currentWorkspaces}>
+              {(workspace) => (
+                <button
+                  type="button"
+                  class={`workspace ${workspace.hasFocus && "focused"} ${workspace.isDisplayed && "displayed"}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    output.glazewm.runCommand(
+                      `focus --workspace ${workspace.name}`,
+                    );
+                  }}
+                >
+                  {workspace.displayName ?? workspace.name}
+                </button>
+              )}
+            </For>
+          </div>
         </div>
 
         <div class="workspace-title">
@@ -94,7 +93,7 @@ function App() {
               glazewm.ContainerType.WINDOW
               ? output.glazewm.focusedContainer.title
               : "",
-            64,
+            84,
           )}
         </div>
       </div>

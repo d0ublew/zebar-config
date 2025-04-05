@@ -47,6 +47,13 @@ i {
 
 .left {
   justify-content: flex-start;
+  flex-flow: column nowrap;
+  gap: 4px;
+}
+
+.left > div {
+  width: 100%;
+  height: 12px;
 }
 
 .center {
@@ -280,22 +287,42 @@ how to remove the virtical space around the range input in IE*/
   flex-grow: 2 !important;
 }
 
+.wm-container {
+  display: flex;
+  flex-flow: row nowrap;
+  font-size: 8px !important;
+  gap: 4px;
+  i {
+    font-size: 6px !important;
+  }
+}
+
+.wm-container > div {
+  padding: 0px 0px !important;
+}
+.wm-container i {
+  color: #292e42;
+  margin-top: 1px;
+  font-weight: bold;
+}
+
 .workspaces {
   background-color: transparent !important;
   gap: 4px !important;
+  padding: 0px 0px !important;
 }
 
 .workspace-title {
   max-width: 100%;
   min-width: 0;
   overflow: hidden;
-  text-overflow: ellipsis;
+  /* text-overflow: ellipsis; */
   white-space: nowrap;
 }
 
 .workspace {
   background: rgb(255 255 255 / 5%);
-  padding: 4px 8px;
+  padding: 1px 4px;
   color: rgb(255 255 255 / 90%);
   border: none;
   border-radius: 2px;
