@@ -260,7 +260,7 @@ how to remove the virtical space around the range input in IE*/
 }
 
 .audio-slider {
-  width: 64px;
+  width: 96px;
   margin: 0px;
 }
 
@@ -301,6 +301,7 @@ how to remove the virtical space around the range input in IE*/
   border-radius: 2px;
   cursor: pointer;
   font-weight: bold;
+  transition: 0.3s;
 
   &.displayed {
     background: #9ece6a !important;
