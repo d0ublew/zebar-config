@@ -89,10 +89,13 @@ function App() {
         </div>
 
         <div class="workspace-title">
-          {output.glazewm?.focusedContainer.type ===
-          glazewm.ContainerType.WINDOW
-            ? output.glazewm.focusedContainer.title
-            : ""}
+          {marquee(
+            output.glazewm?.focusedContainer.type ===
+              glazewm.ContainerType.WINDOW
+              ? output.glazewm.focusedContainer.title
+              : "",
+            64,
+          )}
         </div>
       </div>
 
@@ -131,7 +134,7 @@ function App() {
             <span class="chip-text">
               <i class="nf nf-fa-music" />
               {"\u2002"}
-              {truncate(output.media?.currentSession?.title, 16) || "offline"}
+              {marquee(output.media?.currentSession?.title, 16) || "offline"}
             </span>
             {getMediaControl(output.media)}
           </div>
@@ -196,7 +199,7 @@ function App() {
             <span class="chip-text">
               {getNetworkIcon(output.network)}
               {"\u2002"}
-              {getNetworkText(output.network)}
+              {marquee(getNetworkText(output.network), 24)}
             </span>
           </button>
         </div>
@@ -273,6 +276,26 @@ function getAppTitle(gwo: zebar.GlazeWmOutput): string {
   return title;
 }
 
+function marquee(s: string, max_len: number) {
+  // const spacer = "\u2002\u2002\u2002\u2002";
+  if (!s) {
+    return <div />;
+  }
+  if (s.length >= max_len) {
+    return (
+      <div class="marquee">
+        <div class="marquee__inner">
+          <span>{s}</span>
+          <span>{s}</span>
+          <span>{s}</span>
+          <span>{s}</span>
+        </div>
+      </div>
+    );
+  }
+  return <span>{s}</span>;
+}
+
 function truncate(s: string, max_len: number) {
   if (!s) {
     return undefined;
@@ -338,10 +361,10 @@ function getNetworkText(network: zebar.NetworkOutput) {
   if (network?.defaultInterface) {
     if (network?.defaultGateway) {
       // return `${network?.defaultInterface?.ipv4Addresses} (${truncate(network?.defaultGateway?.ssid, 24)})`;
-      return truncate(network?.defaultGateway?.ssid, 24);
+      return network?.defaultGateway?.ssid;
     }
     // return `${network?.defaultInterface?.ipv4Addresses} (${truncate(network?.defaultInterface?.friendlyName, 24)})`;
-    return truncate(network?.defaultInterface?.friendlyName, 24);
+    return network?.defaultInterface?.friendlyName;
   }
   return "disconnected";
 }
