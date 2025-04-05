@@ -3,6 +3,7 @@
 html,
 body {
   height: 100%;
+  pointer-events: none;
 }
 
 body {
@@ -21,6 +22,7 @@ body {
   background: rgb(36 40 59 / 75%);
   border-radius: 10px;
   height: 40px;
+  pointer-events: auto;
 }
 
 i {
@@ -59,7 +61,7 @@ i {
 .center {
   justify-content: center;
   z-index: 100;
-  pointer-events: none;
+  pointer-events: none; /* avoid blocking media hover */
 }
 
 .right {
@@ -292,20 +294,20 @@ how to remove the virtical space around the range input in IE*/
 .wm-container {
   display: flex;
   flex-flow: row nowrap;
-  font-size: 8px !important;
+  align-items: center;
+  font-size: 10px !important;
   gap: 4px;
-  i {
-    font-size: 6px !important;
-  }
 }
 
 .wm-container > div {
   padding: 0px 0px !important;
 }
+
 .wm-container i {
   color: #292e42;
-  margin-top: 1px;
   font-weight: bold;
+  font-size: 8px !important;
+  padding: 2px 0px;
 }
 
 .workspaces {

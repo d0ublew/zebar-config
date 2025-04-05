@@ -12,7 +12,7 @@ const providers = zebar.createProviderGroup({
   network: { type: "network" },
   date: { type: "date", formatting: "EEE d MMM T" },
   cpu: { type: "cpu" },
-  battery: { type: "battery" },
+  battery: { type: "battery", refreshInterval: 5000 },
   memory: { type: "memory" },
   weather: { type: "weather" },
   audio: { type: "audio" },
@@ -133,7 +133,7 @@ function App() {
             <span class="chip-text">
               <i class="nf nf-fa-music" />
               {"\u2002"}
-              {marquee(output.media?.currentSession?.title, 16) || "offline"}
+              {marquee(output.media?.currentSession?.title, 12) || "offline"}
             </span>
             {getMediaControl(output.media)}
           </div>
