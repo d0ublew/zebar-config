@@ -50,7 +50,6 @@ function App() {
         </div>
 
         <div class="workspace-title">
-          {/* {getAppTitle(output.glazewm?.focusedContainer)} */}
           {output.glazewm?.focusedContainer.type ===
           glazewm.ContainerType.WINDOW
             ? output.glazewm.focusedContainer.title
@@ -189,9 +188,12 @@ function App() {
         )}
 
         {output.battery && (
-          <div class="chip">
+          <div
+            class="chip"
+            style={`background-color: ${getBatteryColor(output.battery)}`}
+          >
             <span class="chip-text">
-              <i class="nf nf-md-battery" />
+              {getBatteryIcon(output.battery)}
               {Math.round(output.battery.chargePercent)
                 .toString()
                 .padStart(3, "\u2002")}
@@ -238,6 +240,24 @@ function secondsToTime(seconds: number) {
   const formattedMinutes = minutes.toString().padStart(2, "0");
   const formattedSeconds = remainingSeconds.toString().padStart(2, "0");
   return `${formattedMinutes}:${formattedSeconds}`;
+}
+
+function getBatteryIcon(battery: zebar.BatteryOutput) {
+  if (battery.isCharging) return <i class="nf nf-md-battery_charging" />;
+  if (battery.chargePercent > 90) return <i class="nf nf-md-battery" />;
+  if (battery.chargePercent > 70) return <i class="nf nf-md-battery_70" />;
+  if (battery.chargePercent > 40) return <i class="nf nf-md-battery_50" />;
+  if (battery.chargePercent > 20) return <i class="nf nf-md-battery_30" />;
+  return <i class="nf nf-md-battery_10" />;
+}
+
+function getBatteryColor(battery: zebar.BatteryOutput) {
+  if (battery.isCharging) return "#9ece6a";
+  if (battery.chargePercent > 90) return "#7aa2f7";
+  if (battery.chargePercent > 70) return "#bb9af7";
+  if (battery.chargePercent > 40) return "#ff9e64";
+  if (battery.chargePercent > 20) return "#f7768e";
+  return "#f7768e";
 }
 
 function getMediaPlaybackControl(media: zebar.MediaOutput) {
