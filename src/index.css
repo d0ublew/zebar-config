@@ -1,4 +1,5 @@
-@import "https://www.nerdfonts.com/assets/css/webfont.css";
+/* @import "https://www.nerdfonts.com/assets/css/webfont.css"; */
+@import url("webfont.css");
 
 html,
 body {
@@ -222,7 +223,7 @@ how to remove the virtical space around the range input in IE*/
   align-items: center;
   justify-content: center;
   text-align: center;
-  margin-top: 36px;
+  margin-top: 40px;
   padding: 8px;
   /* background: rgb(36 40 59 / 30%); */
   background: rgb(41 46 66 / 80%);
@@ -282,12 +283,12 @@ how to remove the virtical space around the range input in IE*/
   display: flex;
   align-items: center;
   flex-wrap: nowrap;
-  margin-left: 0px;
+  margin-left: 2px;
 }
 
 .audio-container:hover .audio-slider-container {
   width: 96px;
-  margin-left: 2px;
+  margin-left: 4px;
   flex-grow: 2 !important;
 }
 

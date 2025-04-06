@@ -381,7 +381,10 @@ function getMediaControl(media: zebar.MediaOutput) {
           media?.previous();
         }}
       >
-        <i class="nf nf-md-skip_previous" />
+        <i
+          class="nf nf-md-skip_previous"
+          style="font-size: 9px; margin-bottom: 1.5px;"
+        />
       </button>
       <button type="button" onClick={() => media?.togglePlayPause()}>
         <i
@@ -395,7 +398,10 @@ function getMediaControl(media: zebar.MediaOutput) {
           media?.next();
         }}
       >
-        <i class="nf nf-md-skip_next" />
+        <i
+          class="nf nf-md-skip_next"
+          style="font-size: 9px; margin-bottom: 1.5px;"
+        />
       </button>
     </div>
   );
