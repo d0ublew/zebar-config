@@ -133,7 +133,7 @@ function App() {
             <span class="chip-text">
               <i class="nf nf-fa-music" />
               {"\u2002"}
-              {marquee(output.media?.currentSession?.title, 12) || "offline"}
+              {marquee(output.media?.currentSession?.title ?? "offline", 12)}
             </span>
             {getMediaControl(output.media)}
           </div>
