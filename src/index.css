@@ -260,7 +260,11 @@ how to remove the virtical space around the range input in IE*/
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
-  padding: 4px 4px;
+  padding: 0px 2px;
+}
+
+.media-control {
+  font-size: 8px;
 }
 
 .audio-container {

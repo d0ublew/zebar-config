@@ -1,5 +1,4 @@
 /* @refresh reload */
-import { createSignal } from "solid-js";
 import "./index.css";
 import * as glazewm from "glazewm";
 // import "./audio.module.css";
@@ -381,10 +380,7 @@ function getMediaControl(media: zebar.MediaOutput) {
           media?.previous();
         }}
       >
-        <i
-          class="nf nf-md-skip_previous"
-          style="font-size: 9px; margin-bottom: 1.5px;"
-        />
+        <i class="nf nf-md-skip_previous" />
       </button>
       <button type="button" onClick={() => media?.togglePlayPause()}>
         <i
@@ -398,10 +394,7 @@ function getMediaControl(media: zebar.MediaOutput) {
           media?.next();
         }}
       >
-        <i
-          class="nf nf-md-skip_next"
-          style="font-size: 9px; margin-bottom: 1.5px;"
-        />
+        <i class="nf nf-md-skip_next" />
       </button>
     </div>
   );
